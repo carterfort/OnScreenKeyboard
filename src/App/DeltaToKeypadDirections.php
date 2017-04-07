@@ -13,30 +13,50 @@ class DeltaToKeypadDirections
 	 */
     public function convert($directions)
     {
-    	$output = [];
+    	$output = collect([]);
+    	$keyPresses = $this->getKeyPresses();
 
     	$vertical = $directions[0];
     	$horizontal = $directions[1];
 
-		for($i = 0; $i < abs($vertical); $i++){
-			if ($vertical < 0){
-				$output[] = "U";
-			} else {
-				$output[] = "D";
-			}
+		if ($this->isPositive($vertical)){
+			$output = $output->merge($keyPresses['down']->take($vertical));
+		} else {
+			$output = $output->merge($keyPresses['up']->take($vertical));
 		}
 
-		for($i = 0; $i < abs($horizontal); $i++){
-			if ($horizontal < 0){
-				$output[] = "L";
-			} else {
-				$output[] = "R";
-			}
+		if ($this->isPositive($horizontal)){
+			$output = $output->merge($keyPresses['right']->take($horizontal));
+		} else {
+			$output = $output->merge($keyPresses['left']->take($horizontal));
 		}
 
-		$output[] = "#";
+		$output->push("#");
 
-        return $output;
+        return $output->toArray();
+    }
+
+    protected function isPositive($number)
+    {
+    	return $number > 0;
+    }
+
+    protected function getKeyPresses()
+    {
+    	return collect([
+			'left' => collect([
+				'L', 'L', 'L', 'L', 'L'
+			]),
+			'right' => collect([
+				'R', 'R', 'R', 'R', 'R'
+			]),
+			'up' => collect([
+				'U', 'U', 'U', 'U', 'U'
+			]),
+			'down' => collect([
+				'D', 'D', 'D', 'D', 'D'
+			])
+		]);
     }
 
 
