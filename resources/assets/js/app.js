@@ -23,7 +23,8 @@ new Vue({
 		pressedRow : false,
 		spaceBarPressed : false,
 		searchText : '',
-		enteredText : ''
+		enteredText : '',
+		outputText: ''
 	},
 	computed : {
 		activeCoords(){
@@ -61,9 +62,9 @@ new Vue({
 				.then(function(response){
 
 					var timerOffset = 0;
+					this.outputText = response.data.output.join(',');
 
 					response.data.output.forEach(function(direction){
-
 						setTimeout(function(){
 							let convertedDirection = directions[direction]
 							this.handleCursorInput(convertedDirection);
@@ -77,6 +78,7 @@ new Vue({
 			this.activeRow = 0;
 			this.activeColumn = 0;
 			this.enteredText = '';
+			this.outputText = '';
 		},
 		pressSpaceBar(){
 			this.spaceBarPressed = true;
@@ -110,7 +112,7 @@ new Vue({
 			if(this.pressedColumn === false) return;
 			return key.coordinates[0] == this.pressedRow && key.coordinates[1] == this.pressedColumn;
 		},
-		handleCursorInput(direction){;
+		handleCursorInput(direction){
 
 			switch(direction){
 				case 0:

@@ -955,7 +955,8 @@ new Vue({
 		pressedRow: false,
 		spaceBarPressed: false,
 		searchText: '',
-		enteredText: ''
+		enteredText: '',
+		outputText: ''
 	},
 	computed: {
 		activeCoords: function activeCoords() {
@@ -992,9 +993,9 @@ new Vue({
 			axios.get('/convert?string=' + this.searchText).then(function (response) {
 
 				var timerOffset = 0;
+				this.outputText = response.data.output.join(',');
 
 				response.data.output.forEach(function (direction) {
-
 					setTimeout(function () {
 						var convertedDirection = directions[direction];
 						this.handleCursorInput(convertedDirection);
@@ -1007,6 +1008,7 @@ new Vue({
 			this.activeRow = 0;
 			this.activeColumn = 0;
 			this.enteredText = '';
+			this.outputText = '';
 		},
 		pressSpaceBar: function pressSpaceBar() {
 			this.spaceBarPressed = true;
@@ -1041,7 +1043,6 @@ new Vue({
 			return key.coordinates[0] == this.pressedRow && key.coordinates[1] == this.pressedColumn;
 		},
 		handleCursorInput: function handleCursorInput(direction) {
-			;
 
 			switch (direction) {
 				case 0:

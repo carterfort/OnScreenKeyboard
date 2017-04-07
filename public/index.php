@@ -109,6 +109,12 @@ if (isset($_GET["string"])){
 					<div class="box">
 						<h4 class="title is-4" v-text="enteredText"></h4>
 					</div>
+
+					<br/>
+
+					<div class="box">
+						<h6 class="title is-6" v-text="outputText"></h6>
+					</div>
 				</div>
 			</div>
 		</div>
