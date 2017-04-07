@@ -1,3 +1,7 @@
+Demonstration:
+
+![](https://github.com/carterfort/OnScreenKeyboard/blob/master/Demo.gif)
+
 On Screen Keyboard
 ==================
 
