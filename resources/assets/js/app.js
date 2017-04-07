@@ -11,7 +11,7 @@ const directions = {
 	"#" : 5
 };
 
-const buttonPressTime = 240;
+const buttonPressTime = 200;
 
 new Vue({
 
@@ -67,8 +67,8 @@ new Vue({
 						setTimeout(function(){
 							let convertedDirection = directions[direction]
 							this.handleCursorInput(convertedDirection);
-						}.bind(this), timerOffset + 180);
-						timerOffset += 180;
+						}.bind(this), timerOffset + 120);
+						timerOffset += 120;
 
 					}.bind(this));
 				}.bind(this))
