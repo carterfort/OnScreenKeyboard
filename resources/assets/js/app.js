@@ -49,6 +49,9 @@ new Vue({
 		},
 		activeKey(){
 			return this.keyboardRows[this.activeRow][this.activeColumn];
+		},
+		spaceBarIsActive(){
+			return this.activeRow == -1 || this.activeRow == 6;
 		}
 	},
 	methods : {
@@ -85,7 +88,10 @@ new Vue({
 			}.bind(this), buttonPressTime);
 		},
 		pressKey(){
-			
+			if (this.spaceBarIsActive) {
+				this.pressSpaceBar();
+				return;
+			}
 			this.enteredText += this.activeKey.key;
 
 			this.pressedColumn = this.activeColumn;
@@ -97,7 +103,7 @@ new Vue({
 		},
 		keyIsActive(key){
 			if (this.spaceBarPressed) return false;
-			
+
 			return key.coordinates[0] == this.activeRow && key.coordinates[1] == this.activeColumn;
 		},
 		keyIsPressed(key){	
@@ -109,19 +115,19 @@ new Vue({
 			switch(direction){
 				case 0:
 				this.activeRow -= 1;
-				this.activeRow = this.normalizeNumber(this.activeRow);
+				if (this.activeRow < -1) this.activeRow = 5;
 				break;
 				case 1:
 				this.activeColumn += 1;
-				this.activeColumn = this.normalizeNumber(this.activeColumn);
+				if (this.activeColumn > 5) this.activeColumn = 0;
 				break;
 				case 2:
 				this.activeRow += 1;
-				this.activeRow = this.normalizeNumber(this.activeRow);
+				if (this.activeRow > 6) this.activeRow = 0;
 				break;
 				case 3:
 				this.activeColumn -= 1;
-				this.activeColumn = this.normalizeNumber(this.activeColumn);
+				if (this.activeColumn < 0) this.activeColumn = 5;
 				break;
 				case 4:
 				this.pressSpaceBar();
@@ -132,10 +138,5 @@ new Vue({
 			}
 
 		},
-		normalizeNumber(number){
-			if (number < 0) number = 5;
-			if (number > 5) number = 0;
-			return number;
-		}
 	}
 })
