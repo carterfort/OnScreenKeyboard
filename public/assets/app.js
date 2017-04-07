@@ -63,15 +63,115 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(6);
 
-__webpack_require__(2);
+var keyboardCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+var directions = {
+	"U": 0,
+	"R": 1,
+	"D": 2,
+	"L": 3,
+	"S": 4,
+	"#": 5
+};
+
+var buttonPressTime = 240;
+
+new Vue({
+
+	el: "#television",
+	data: {
+		activeColumn: 0,
+		activeRow: 0,
+		pressedColumn: false,
+		pressedRow: false,
+		spaceBarPressed: false
+	},
+	computed: {
+		activeCoords: function activeCoords() {
+			return [parseInt(this.activeColumn), parseInt(this.activeRow)];
+		},
+		keyboardRows: function keyboardRows() {
+
+			var keyboard = [];
+
+			for (var i = 0; i < 6; i++) {
+				var row = [];
+
+				for (var o = 0; o < 6; o++) {
+					row.push({
+						"key": keyboardCharacters[i * 6 + o],
+						"coordinates": [i, o]
+					});
+				}
+				keyboard.push(row);
+			}
+
+			return keyboard;
+		}
+	},
+	methods: {
+		reset: function reset() {
+			this.activeRow = 0;
+			this.activeColumn = 0;
+		},
+		pressSpaceBar: function pressSpaceBar() {
+			this.spaceBarPressed = true;
+			setTimeout(function () {
+				this.spaceBarPressed = true;
+			}.bind(this), buttonPressTime);
+		},
+		pressKey: function pressKey() {
+			this.pressedColumn = this.activeColumn;
+			this.pressedRow = this.activeRow;
+			setTimeout(function () {
+				this.pressedColumn = false;
+				this.pressedRow = false;
+			}.bind(this), buttonPressTime);
+		},
+		keyIsActive: function keyIsActive(key) {
+			return key.coordinates[0] == this.activeRow && key.coordinates[1] == this.activeColumn;
+		},
+		keyIsPressed: function keyIsPressed(key) {
+			if (this.pressedColumn === false) return;
+			return key.coordinates[0] == this.pressedRow && key.coordinates[1] == this.pressedColumn;
+		},
+		moveCursor: function moveCursor(direction) {
+
+			switch (direction) {
+				case 0:
+					this.activeRow -= 1;
+					this.activeRow = this.normalizeNumber(this.activeRow);
+					break;
+				case 1:
+					this.activeColumn += 1;
+					this.activeColumn = this.normalizeNumber(this.activeColumn);
+					break;
+				case 2:
+					this.activeRow += 1;
+					this.activeRow = this.normalizeNumber(this.activeRow);
+					break;
+				case 3:
+					this.activeColumn -= 1;
+					this.activeColumn = this.normalizeNumber(this.activeColumn);
+					break;
+			}
+		},
+		normalizeNumber: function normalizeNumber(number) {
+			if (number < 0) number = 5;
+			if (number > 5) number = 0;
+			return number;
+		}
+	}
+});
 
 /***/ }),
 /* 1 */
@@ -83,11 +183,22 @@ __webpack_require__(2);
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(0);
+module.exports = __webpack_require__(1);
 
-window.Vue = __webpack_require__(4);
 
 /***/ }),
-/* 3 */
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+window.Vue = __webpack_require__(8);
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -273,7 +384,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 4 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9598,10 +9709,10 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(9)))
 
 /***/ }),
-/* 5 */
+/* 9 */
 /***/ (function(module, exports) {
 
 var g;
@@ -9625,14 +9736,6 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(0);
-module.exports = __webpack_require__(1);
 
 
 /***/ })
