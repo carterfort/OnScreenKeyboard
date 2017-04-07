@@ -51,7 +51,7 @@ if (isset($_GET["string"])){
 								</div>
 							</div>
 
-							<div class="box has-text-centered" :class="{ 'is-active' : spaceBarPressed, 'is-pressed' : spaceBarPressed }">
+							<div class="box has-text-centered" :class="{ 'is-active' : spaceBarPressed || spaceBarIsActive, 'is-pressed' : spaceBarPressed }">
 								Space
 							</div>
 						</div>
@@ -72,7 +72,7 @@ if (isset($_GET["string"])){
 									<button class="button is-block" @click="handleCursorInput(3)">Left</button>
 								</div>
 								<div class="column is-4">
-									<button class="button is-block" @click="pressKey()">Go!</button>
+									<button class="button is-block" @click="pressKey()">Sel</button>
 								</div>
 								<div class="column is-4">
 									<button class="button is-block" @click="handleCursorInput(1)">Right</button>
@@ -84,7 +84,10 @@ if (isset($_GET["string"])){
 									<button class="button is-block" @click="handleCursorInput(2)">Down</button>
 								</div>
 							</div>
-							
+								
+							<p>
+								<button class="button is-block" @click="reset()">Reset</button>
+							</p>
 						</div>
 					</div>
 
