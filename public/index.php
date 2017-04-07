@@ -1,3 +1,33 @@
+<?php
+require __DIR__ . "./../vendor/autoload.php";
+
+use Symfony\Component\HttpFoundation\Response;
+
+if (isset($_GET["string"])){
+	$string = $_GET["string"];
+
+	$response = new Response();
+	$response->headers->set('Content-Type', 'application/json');
+
+	$json = [
+		'input' => $string,
+		'output' => ''
+	];
+
+	if ( $string == ''){
+		$json['output'] = ("Use a get variable named 'string' to convert it: /?string=IT CROWD ");
+	} else {
+		$converter = new App\ConvertsStringToDirections();
+		$json['output'] = collect($converter->convert($string));
+	}
+
+	$response->setContent(json_encode($json));
+
+	return $response->send();
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +51,7 @@
 								</div>
 							</div>
 
-							<div class="box has-text-centered" :class="{ 'is-pressed' : spaceBarPressed }">
+							<div class="box has-text-centered" :class="{ 'is-active' : spaceBarPressed, 'is-pressed' : spaceBarPressed }">
 								Space
 							</div>
 						</div>
@@ -33,30 +63,48 @@
 
 							<div class="columns">
 								<div class="column is-4 is-offset-4">
-									<button class="button is-block" @click="moveCursor(0)">Up</button>
+									<button class="button is-block" @click="handleCursorInput(0)">Up</button>
 								</div>
 							</div>
 
 							<div class="columns">
 								<div class="column is-4">
-									<button class="button is-block" @click="moveCursor(3)">Left</button>
+									<button class="button is-block" @click="handleCursorInput(3)">Left</button>
 								</div>
 								<div class="column is-4">
 									<button class="button is-block" @click="pressKey()">Go!</button>
 								</div>
 								<div class="column is-4">
-									<button class="button is-block" @click="moveCursor(1)">Right</button>
+									<button class="button is-block" @click="handleCursorInput(1)">Right</button>
 								</div>
 							</div>
 
 							<div class="columns">
 								<div class="column is-4 is-offset-4">
-									<button class="button is-block" @click="moveCursor(2)">Down</button>
+									<button class="button is-block" @click="handleCursorInput(2)">Down</button>
 								</div>
 							</div>
-
 							
 						</div>
+					</div>
+
+					<br />
+
+					<div class="box">
+						<div class="field has-addons">
+							<p class="control">
+								<input class="input" @keyup.enter="makeItSo()" v-model="searchText" />
+							</p>
+							<p class="control">
+								<button class="button is-info" @click="makeItSo()">Search</button>
+							</p>
+						</div>
+					</div>
+
+					<br />
+
+					<div class="box">
+						<h4 class="title is-4" v-text="enteredText"></h4>
 					</div>
 				</div>
 			</div>
