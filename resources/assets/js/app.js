@@ -21,7 +21,9 @@ new Vue({
 		activeRow : 0,
 		pressedColumn : false,
 		pressedRow : false,
-		spaceBarPressed : false
+		spaceBarPressed : false,
+		searchText : '',
+		enteredText : ''
 	},
 	computed : {
 		activeCoords(){
@@ -44,20 +46,48 @@ new Vue({
 			}
 
 			return keyboard
+		},
+		activeKey(){
+			return this.keyboardRows[this.activeRow][this.activeColumn];
 		}
 	},
 	methods : {
+		makeItSo(){
+			this.reset();
+			axios.get('/convert?string='+this.searchText)
+				.then(function(response){
+
+					var timerOffset = 0;
+
+					response.data.output.forEach(function(direction){
+
+						setTimeout(function(){
+							let convertedDirection = directions[direction]
+							this.handleCursorInput(convertedDirection);
+						}.bind(this), timerOffset + 180);
+						timerOffset += 180;
+
+					}.bind(this));
+				}.bind(this))
+		},
 		reset(){
 			this.activeRow = 0;
 			this.activeColumn = 0;
+			this.enteredText = '';
 		},
 		pressSpaceBar(){
 			this.spaceBarPressed = true;
+
+			this.enteredText += ' ';
+
 			setTimeout(function(){
-				this.spaceBarPressed = true;
+				this.spaceBarPressed = false;
 			}.bind(this), buttonPressTime);
 		},
 		pressKey(){
+			
+			this.enteredText += this.activeKey.key;
+
 			this.pressedColumn = this.activeColumn;
 			this.pressedRow = this.activeRow;
 			setTimeout(function(){
@@ -66,13 +96,15 @@ new Vue({
 			}.bind(this), buttonPressTime);
 		},
 		keyIsActive(key){
+			if (this.spaceBarPressed) return false;
+			
 			return key.coordinates[0] == this.activeRow && key.coordinates[1] == this.activeColumn;
 		},
 		keyIsPressed(key){	
 			if(this.pressedColumn === false) return;
 			return key.coordinates[0] == this.pressedRow && key.coordinates[1] == this.pressedColumn;
 		},
-		moveCursor(direction){
+		handleCursorInput(direction){;
 
 			switch(direction){
 				case 0:
@@ -90,6 +122,12 @@ new Vue({
 				case 3:
 				this.activeColumn -= 1;
 				this.activeColumn = this.normalizeNumber(this.activeColumn);
+				break;
+				case 4:
+				this.pressSpaceBar();
+				break;
+				case 5:
+				this.pressKey()
 				break;
 			}
 
