@@ -1,7 +1,19 @@
-
 //Bulma
 @import "node_modules/bulma/bulma.sass";
 
 // Variables
 @import "variables";
 
+.box.is-active {
+	background-color: $primary;
+	color: white;
+}
+
+.box.is-active.is-pressed {
+	background-color: $info;
+}
+
+.button.is-block {
+	display:block;
+	width:100%;
+}
